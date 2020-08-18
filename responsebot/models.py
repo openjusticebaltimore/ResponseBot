@@ -166,3 +166,17 @@ class List(object):
                 setattr(self, key, parse(value))
             else:
                 setattr(self, key, value)
+
+
+class DirectMessage(object):
+    """
+    Represent a direct message.
+    """
+    def __init__(self, data):
+        """
+        :param data: Parsed JSON data
+        :type data: dictionary
+        """
+        self.raw_data = data
+        for key, value in data.items():
+            setattr(self, key, value)

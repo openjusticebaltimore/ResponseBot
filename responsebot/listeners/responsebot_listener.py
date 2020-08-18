@@ -69,8 +69,27 @@ class ResponseBotListener(object):
         for handler in self.handlers:
             handler.on_event(event)
 
+    def on_direct_message(self, message):
+        """
+        Callback to receive direct message from :class:`~responsebot.responsebot_stream.ResponseBotStream`. Tries to forward the
+        received direct message to registered handlers.
+
+        :param message: An object containing a direct message's text and metadata
+        :type message: :class:`~responsebot.models.DirectMessage`
+        """
+        logging.info(u'Received direct message: `{message}`'.format(message=message.message_create['message_data']['text']))
+
+        for handler in self.handlers:
+            if not handler.catch_sent_messages and self.is_sent_direct_message(message):
+                continue
+
+            handler.on_direct_message(message)
+
     def is_self_tweet(self, tweet):
         return self.client.get_current_user().id == tweet.user.id
+
+    def is_sent_direct_message(self, message):
+        return str(self.client.get_current_user().id) == message.message_create['sender_id']
 
     def get_merged_filter(self):
         """

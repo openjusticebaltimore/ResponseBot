@@ -10,7 +10,7 @@ from responsebot.common.constants import TWITTER_PAGE_DOES_NOT_EXISTS_ERROR, TWI
     TWITTER_STATUS_DUPLICATE_ERROR
 from responsebot.common.exceptions import APIQuotaError, AutomatedRequestError, OverCapacityError,\
     DailyStatusUpdateError, CharacterLimitError, StatusDuplicateError
-from responsebot.models import Tweet, User, List
+from responsebot.models import Tweet, User, List, DirectMessage
 from responsebot.utils.tweepy import tweepy_list_to_json
 
 
@@ -160,6 +160,18 @@ class ResponseBotClient(object):
         :return: The user that were unfollowed
         """
         return User(self._client.destroy_friendship(user_id=user_id)._json)
+
+    @api_error_handle
+    def direct_message(self, user_id, text):
+        """
+        Send a direct message to a user.
+
+        :param user_id: ID of the user to direct message
+        :param text: the text to send in the message
+        :return: DirectMessage object
+        """
+
+        return DirectMessage(self._client.send_direct_message(user_id=user_id, text=text)._json)
 
     ###################################################################################
     # Lists

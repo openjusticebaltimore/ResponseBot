@@ -1,6 +1,6 @@
 from tweepy.streaming import StreamListener
 
-from responsebot.models import Tweet, Event
+from responsebot.models import Tweet, Event, DirectMessage
 
 
 class TweepyWrapperListener(StreamListener):
@@ -14,3 +14,6 @@ class TweepyWrapperListener(StreamListener):
 
     def on_event(self, event):
         self.listener.on_event(Event(event._json))
+
+    def on_direct_message(self, message):
+        self.listener.on_direct_message(DirectMessage(message._json))

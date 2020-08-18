@@ -260,6 +260,16 @@ class TweetClientTestCase(TestCase):
         self.real_client.destroy_friendship.assert_called_once_with(user_id=123)
         self.assertEqual(user.some_key, 'some value')
 
+    def test_direct_message(self):
+        self.real_client.send_direct_message = MagicMock(return_value=MagicMock(_json={
+            'some_key': 'some value',
+        }))
+
+        message = self.client.direct_message(user_id=1234567890, text='some text')
+
+        self.real_client.send_direct_message.assert_called_once_with(user_id=1234567890, text='some text')
+        self.assertEqual(message.some_key, 'some value')
+
     def test_create_list(self):
         api_return = self.check_api_call_success(
             api='create_list',

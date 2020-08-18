@@ -15,6 +15,7 @@ class BaseTweetHandler(object):
         :param client: Some Twitter API client for authentication. E.g. :class:`~responsebot.tweet_client.TweetClient`
         """
         self.catch_self_tweets = False
+        self.catch_sent_messages = False
         self.client = client
         self.filter = self.get_filter()
 
@@ -59,3 +60,12 @@ class BaseTweetHandler(object):
         """
         if self.event_handler:
             self.event_handler.handle(event)
+
+    def on_direct_message(self, message):
+        """
+        Callback for when a direct message is received.
+
+        :param message: The received direct message
+        :type message: :class:`~responsebot.models.DirectMessage`
+        """
+        pass

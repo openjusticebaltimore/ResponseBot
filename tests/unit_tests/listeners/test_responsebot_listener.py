@@ -78,3 +78,29 @@ class ResponseBotListenerTestCase(TestCase):
         listener.on_event(event)
 
         handler.on_event.assert_not_called()
+
+    def test_call_handlers_on_direct_message(self):
+        handler_1 = MagicMock(on_tweet=MagicMock())
+        handler_2 = MagicMock(on_tweet=MagicMock())
+        listener = ResponseBotListener(handler_classes=[], client=MagicMock())
+        listener.handlers = [handler_1, handler_2]
+
+        message = MagicMock(user_id=1234567890, text='direct message')
+        listener.on_direct_message(message)
+
+        handler_1.on_direct_message.assert_called_once_with(message)
+        handler_2.on_direct_message.assert_called_once_with(message)
+
+    def test_handlers_handle_sent_messages(self):
+        ignore_sent_messages_handler = MagicMock(catch_sent_messages=False)
+        not_ignore_sent_messages_handler = MagicMock(catch_sent_messages=True)
+
+        client = MagicMock(get_current_user=MagicMock(return_value=MagicMock(id='responsebot')))
+        listener = ResponseBotListener(handler_classes=[MagicMock], client=client)
+        listener.handlers = [ignore_sent_messages_handler, not_ignore_sent_messages_handler]
+        message = MagicMock(message_create={'sender_id': 'responsebot', 'message_data': {'text': 'foo'}})
+
+        listener.on_direct_message(message)
+
+        not_ignore_sent_messages_handler.on_direct_message.assert_called_once_with(message)
+        ignore_sent_messages_handler.on_direct_message.assert_not_called()

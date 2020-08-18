@@ -30,3 +30,14 @@ class TweepyWrapperListenerTestCase(TestCase):
             TweepyWrapperListener(listener=generic_listener).on_event(event)
 
             generic_listener.on_event.assert_called_once_with(event_wrapper)
+
+    def test_call_generic_listener_on_direct_message(self):
+        generic_listener = MagicMock(on_direct_message=MagicMock())
+        message = MagicMock(_json={'some key': 'some value'})
+
+        message_obj = 'message_obj'
+        with patch('responsebot.listeners.tweepy_wrapper_listener.DirectMessage', return_value=message_obj) as mock_message_obj:
+            TweepyWrapperListener(listener=generic_listener).on_direct_message(message)
+
+            mock_message_obj.assert_called_once_with(message._json)
+            generic_listener.on_direct_message.assert_called_once_with(message_obj)

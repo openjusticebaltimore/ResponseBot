@@ -1,4 +1,4 @@
-click==6.6
+click==7.1.2
 coverage==4.0.3
 decorator==4.0.9
 oauthlib==1.0.3
@@ -6,7 +6,7 @@ pluggy==0.3.1
 py==1.4.31
 pytest==2.9.1
 python-dateutil==2.5.3
-python-dotenv==0.4.0
+python-dotenv==0.7.1
 requests==2.9.1
 requests-oauthlib==0.6.1
 six==1.10.0
